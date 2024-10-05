@@ -7,8 +7,9 @@ public interface IStateMachine
 {
     #region PROPERTIES
     
-    public StateType CurrentState { get; }
     public bool IsStateMachineRunning { get; }
+    
+    public StateType CurrentState { get; }
     
     #endregion // PROPERTIES
 
