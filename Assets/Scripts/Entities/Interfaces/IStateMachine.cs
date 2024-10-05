@@ -16,10 +16,10 @@ public interface IStateMachine
     #region METHODS
 
     public void AddState(StateType stateType, IState state);
-    public void FixedUpdate();
+    public void ProcessFixed();
     public void RemoveState(StateType stateType);
     public void StartStateMachine();
-    public void Update();
+    public void Process();
     public bool ValidateStateMachine();
 
     #endregion // METHODS

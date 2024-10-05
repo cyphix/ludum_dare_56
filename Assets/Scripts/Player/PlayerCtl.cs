@@ -34,7 +34,7 @@ public class PlayerCtl : MonoBehaviour
     {
         if(this._sm.IsStateMachineRunning)
         {
-            this._sm.Update();
+            this._sm.Process();
         }
     }
 
@@ -42,7 +42,7 @@ public class PlayerCtl : MonoBehaviour
     {
         if(this._sm.IsStateMachineRunning)
         {
-            this._sm.FixedUpdate();
+            this._sm.ProcessFixed();
         }
     }
     
@@ -53,7 +53,12 @@ public class PlayerCtl : MonoBehaviour
 
     private void BuildStateMachine()
     {
-        throw new NotImplementedException();
+        IState[] states = this.GetComponents<IState>();
+
+        foreach(IState state in states)
+        {
+            this._sm.AddState(state.Type, state);
+        }
     }
     
     #endregion // CONSTRUCTOR METHODS

@@ -52,7 +52,7 @@ public class StateMachine : IStateMachine
         }
     }
     
-    public void FixedUpdate()
+    public void ProcessFixed()
     {
         if(this.IsStateMachineRunning)
         {
@@ -60,7 +60,7 @@ public class StateMachine : IStateMachine
 
             if(this.CurrentState != StateType.Null)
             {
-                this._currentState.FixedUpdate();
+                this._currentState.ProcessFixed();
             }
         }
     }
@@ -88,13 +88,13 @@ public class StateMachine : IStateMachine
         this.IsStateMachineRunning = true;
     }
     
-    public void Update()
+    public void Process()
     {
         if(this.IsStateMachineRunning)
         {
             if(this.CurrentState != StateType.Null)
             {
-                this._currentState.Update();
+                this._currentState.Process();
             }
         }
     }
