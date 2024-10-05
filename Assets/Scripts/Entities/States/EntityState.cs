@@ -3,7 +3,7 @@ using UnityEngine;
 
 
 
-public abstract class PlayerState : MonoBehaviour, IState
+public abstract class EntityState : MonoBehaviour, IState
 {
     #region INSPECTOR FIELDS
 

@@ -3,7 +3,7 @@ using System;using UnityEngine;
 
 
 [RequireComponent(typeof(EntityBody), typeof(Rigidbody))]
-public class PlayerIdleState : PlayerState
+public class EntityIdleState : EntityState
 {
     #region INTERNAL FIELDS
     

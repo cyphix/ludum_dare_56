@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 [RequireComponent(typeof(EntityBody), typeof(Rigidbody))]
-public class PlayerMoveState : PlayerState
+public class EntityMoveState : EntityState
 {
     #region INSPECTOR FIELDS
 

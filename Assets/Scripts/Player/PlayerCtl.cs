@@ -6,10 +6,11 @@ using UnityEngine.Events;
 
 
 [RequireComponent(typeof(PlayerCmdSys))]
-public class PlayerCtl : MonoBehaviour
+public class PlayerCtl : MonoBehaviour, IEntityCtl
 {
     #region EVENTS
 
+    public UnityEvent<int> ConsumeFoodEvent;
     public UnityEvent<int> HealthEvent;
     public UnityEvent<int> MaxHealthEvent;
     
@@ -17,17 +18,13 @@ public class PlayerCtl : MonoBehaviour
     
     
     #region INSPECTOR FIELDS
-    
-    [Header("State Machine")]
-    [SerializeField]
-    private StateType _startingState = StateType.Null;
 
     [Header("Character")]
     [SerializeField]
     private int _health = 5;
     [SerializeField]
     private int _maxHealth = 5;
-
+    
     [Header("Debug")]
     [SerializeField]
     private bool _debugLogging = false;
@@ -37,10 +34,9 @@ public class PlayerCtl : MonoBehaviour
 
     #region INTERNAL FIELDS
 
-    private StateMachine _sm;
-    
     // Cached References
     private ICmdSystem _cmdSystem;
+    private IStateMachine _sm;
     
     #endregion // INTERNAL FIELDS
     
@@ -55,14 +51,15 @@ public class PlayerCtl : MonoBehaviour
     public void Start()
     {
         this.Initialize();
-        
-        this._sm = new StateMachine(this._startingState);
-        
-        this.BuildStateMachine();
 
+        this.BuildStateMachine();
         if(this._sm.ValidateStateMachine())
         {
             this._sm.StartStateMachine();
+        }
+        else
+        {
+            Debug.LogError($"[{nameof(this._sm)}] failed to validate.");
         }
         
         this.MaxHealthEvent.Invoke(this._maxHealth);
@@ -105,6 +102,7 @@ public class PlayerCtl : MonoBehaviour
     private void CacheReferences()
     {
         this._cmdSystem ??= GetComponent<ICmdSystem>();
+        this._sm ??= GetComponent<IStateMachine>();
     }
 
     private void Initialize()
@@ -132,6 +130,16 @@ public class PlayerCtl : MonoBehaviour
 
 
     #region METHODS
+
+    public void ConsumeFood(int foodValue)
+    {
+        if(this._debugLogging)
+        {
+            Debug.Log($"[{this.name}] consumed [{foodValue}] points of food.");
+        }
+        
+        this.ConsumeFoodEvent.Invoke(foodValue);
+    }
     
     #endregion // METHODS
 

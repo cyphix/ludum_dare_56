@@ -5,34 +5,60 @@ using UnityEngine;
 
 
 
-public class StateMachine : IStateMachine
+public class StateMachine : MonoBehaviour, IStateMachine
 {
+    #region INSPECTOR FIELDS
+
+    [SerializeField]
+    private StateType _startingState;
+
+    [Header("Debug")]
+    [SerializeField]
+    private bool _debugLogging = false;
+    
+    #endregion // INSPECTOR FIELDS
+    
+    
     #region INTERNAL FIELDS
 
     private IState _currentState;
-    private readonly StateType _startingState;
-    private readonly Dictionary<StateType, IState> _states;
+    private  Dictionary<StateType, IState> _states;
     
     #endregion // INTERNAL FIELDS
     
     
     #region PROPERTIES
+    
+    public bool IsStateMachineRunning { get; private set; }
 
     public StateType CurrentState { get; private set; } = StateType.Null;
-    public bool IsStateMachineRunning { get; private set; }
     
     #endregion // PROPERTIES
 
 
+    #region UNITY METHODS
+    
+    private void Awake()
+    {
+        this.Initialize();
+    }
+
+    private void Start()
+    {
+        this.Initialize();
+    }
+    
+    #endregion // UNITY METHODS
+
+
     #region CONSTRUCTOR METHODS
 
-    public StateMachine(StateType startingState)
+    private void Initialize()
     {
-        // Parameters
-        this._startingState = startingState;
-        
-        // Initialize data structures
-        this._states = new Dictionary<StateType, IState>();
+        if(this._states == null)
+        {
+            this._states = new Dictionary<StateType, IState>();
+        }
     }
     
     #endregion // CONSTRUCTOR METHODS
@@ -46,7 +72,7 @@ public class StateMachine : IStateMachine
         {
             Debug.LogWarning($"The state [{stateType}] already exist in the state dictionary.");
         }
-        else
+        else if(this._debugLogging)
         {
             Debug.Log($"Added [{stateType}] state to the state dictionary.");
         }
@@ -72,8 +98,11 @@ public class StateMachine : IStateMachine
             Debug.LogWarning($"Failed to remove [{stateType}] from the state dictionary.");
             return;
         }
-        
-        Debug.Log($"Removed [{stateType}] from the state dictionary.");
+
+        if(this._debugLogging)
+        {
+            Debug.Log($"Removed [{stateType}] from the state dictionary.");
+        }
     }
 
     public void StartStateMachine()
@@ -82,6 +111,7 @@ public class StateMachine : IStateMachine
         {
             Debug.LogError($"This state dictionary does not contain the starting state [{this._startingState}].");
             this.IsStateMachineRunning = false;
+            this.enabled = false;
             return;
         }
 
