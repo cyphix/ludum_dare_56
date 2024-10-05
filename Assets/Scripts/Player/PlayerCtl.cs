@@ -28,9 +28,14 @@ public class PlayerCtl : MonoBehaviour
     
     #region UNITY METHODS
     
+    private void Awake()
+    {
+        this.Initialize();
+    }
+
     public void Start()
     {
-        this.CacheReferences();
+        this.Initialize();
         
         this._sm = new StateMachine(this._startingState);
         
@@ -77,7 +82,12 @@ public class PlayerCtl : MonoBehaviour
 
     private void CacheReferences()
     {
-        this._cmdSystem = GetComponent<ICmdSystem>();
+        this._cmdSystem ??= GetComponent<ICmdSystem>();
+    }
+
+    private void Initialize()
+    {
+        this.CacheReferences();
     }
     
     #endregion // CONSTRUCTOR METHODS

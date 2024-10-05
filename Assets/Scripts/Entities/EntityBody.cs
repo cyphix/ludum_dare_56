@@ -16,9 +16,15 @@ public class EntityBody : MonoBehaviour, IEntityBody
 
 
     #region UNITY METHODS
+    
+    private void Awake()
+    {
+        this.Initialize();
+    }
+
     private void Start()
     {
-        this.CacheReferences();
+        this.Initialize();
     }
     #endregion // UNITY METHODS
 
@@ -27,7 +33,15 @@ public class EntityBody : MonoBehaviour, IEntityBody
 
     private void CacheReferences()
     {
-        this._rigidbody = GetComponent<Rigidbody>();
+        if(this._rigidbody == null)
+        {
+            this._rigidbody = GetComponent<Rigidbody>();
+        }
+    }
+
+    private void Initialize()
+    {
+        this.CacheReferences();
     }
     
     #endregion // CONSTRUCTORS
@@ -41,6 +55,15 @@ public class EntityBody : MonoBehaviour, IEntityBody
 
         this._rigidbody.linearVelocity = new Vector3(normalized.x, 0f, normalized.y) * speed;
     }
+    
+    public void UpdateFacing(Vector2 direction)
+    {
+        if(!(direction.sqrMagnitude > 0.01f)) return;
+        
+        float targetAngle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
+            
+        this._rigidbody.rotation = Quaternion.Euler(0f, targetAngle, 0f);
+    }
 
     public void ZeroMove()
     {
@@ -48,14 +71,4 @@ public class EntityBody : MonoBehaviour, IEntityBody
     }
     
     #endregion // METHODS
-
-
-    #region INTERNAL METHODS
-    
-    private void UpdateFacing(Vector3 direction)
-    {
-        throw new NotImplementedException();
-    }
-    
-    #endregion // INTERNAL METHODS
 }

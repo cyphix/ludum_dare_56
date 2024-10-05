@@ -26,12 +26,15 @@ public class PlayerMoveState : PlayerState
 
     #region UNITY METHODS
     
+    private void Awake()
+    {
+        this.Initialize();
+    }
+
     private void Start()
     {
-        this.CacheReferences();
+        this.Initialize();
         
-        this.Type = StateType.Move;
-
         if(this._settings != null && !this._useOverrideSettings)
         {
             this._moveSpeed = this._settings.MoveSpeed;
@@ -45,8 +48,15 @@ public class PlayerMoveState : PlayerState
 
     private void CacheReferences()
     {
-        this._cmdSystem = GetComponent<ICmdSystem>();
-        this._entityBody = GetComponent<IEntityBody>();
+        this._cmdSystem ??= GetComponent<ICmdSystem>();
+        this._entityBody ??= GetComponent<IEntityBody>();
+    }
+    
+    private void Initialize()
+    {
+        this.CacheReferences();
+        
+        this.Type = StateType.Move;
     }
     
     #endregion // CONSTRUCTORS
@@ -64,9 +74,20 @@ public class PlayerMoveState : PlayerState
         return StateType.Null;
     }
 
+    public override void Process()
+    {
+        if(this.IsActive)
+        {
+            this._entityBody.UpdateFacing(this._cmdSystem.Move);
+        }
+    }
+
     public override void ProcessFixed()
     {
-        this._entityBody.Move(this._cmdSystem.Move, this._moveSpeed);
+        if(this.IsActive)
+        {
+            this._entityBody.Move(this._cmdSystem.Move, this._moveSpeed);
+        }
     }
     #endregion // METHODS
 }

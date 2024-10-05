@@ -16,11 +16,14 @@ public class PlayerIdleState : PlayerState
 
     #region UNITY METHODS
     
+    private void Awake()
+    {
+        this.Initialize();
+    }
+
     private void Start()
     {
-        this.CacheReferences();
-        
-        this.Type = StateType.Idle;
+        this.Initialize();
     }
     
     #endregion // UNITY METHODS
@@ -30,8 +33,15 @@ public class PlayerIdleState : PlayerState
 
     private void CacheReferences()
     {
-        this._cmdSystem = GetComponent<ICmdSystem>();
-        this._entityBody = GetComponent<IEntityBody>();
+        this._cmdSystem ??= GetComponent<ICmdSystem>();
+        this._entityBody ??= GetComponent<IEntityBody>();
+    }
+
+    private void Initialize()
+    {
+        this.CacheReferences();
+        
+        this.Type = StateType.Idle;
     }
     
     #endregion // CONSTRUCTORS
