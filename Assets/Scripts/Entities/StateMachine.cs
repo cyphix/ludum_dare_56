@@ -86,6 +86,8 @@ public class StateMachine : IStateMachine
         }
 
         this.IsStateMachineRunning = true;
+        
+        this.Transition(this._startingState);
     }
     
     public void Process()

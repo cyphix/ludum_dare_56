@@ -1,8 +1,10 @@
 ﻿using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
 
+[RequireComponent(typeof(PlayerCmdSys))]
 public class PlayerCtl : MonoBehaviour
 {
     #region INSPECTOR FIELDS
@@ -18,6 +20,9 @@ public class PlayerCtl : MonoBehaviour
 
     private StateMachine _sm;
     
+    // Cached References
+    private ICmdSystem _cmdSystem;
+    
     #endregion // INTERNAL FIELDS
     
     
@@ -25,9 +30,16 @@ public class PlayerCtl : MonoBehaviour
     
     public void Start()
     {
+        this.CacheReferences();
+        
         this._sm = new StateMachine(this._startingState);
         
         this.BuildStateMachine();
+
+        if(this._sm.ValidateStateMachine())
+        {
+            this._sm.StartStateMachine();
+        }
     }
 
     public void Update()
@@ -40,6 +52,8 @@ public class PlayerCtl : MonoBehaviour
 
     public void FixedUpdate()
     {
+        this._cmdSystem.ProcessFixed();
+        
         if(this._sm.IsStateMachineRunning)
         {
             this._sm.ProcessFixed();
@@ -59,6 +73,11 @@ public class PlayerCtl : MonoBehaviour
         {
             this._sm.AddState(state.Type, state);
         }
+    }
+
+    private void CacheReferences()
+    {
+        this._cmdSystem = GetComponent<ICmdSystem>();
     }
     
     #endregion // CONSTRUCTOR METHODS

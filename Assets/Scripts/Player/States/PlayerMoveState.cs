@@ -1,10 +1,20 @@
-using System;using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 
 
 [RequireComponent(typeof(EntityBody), typeof(Rigidbody))]
-public class PlayerIdleState : PlayerState
+public class PlayerMoveState : PlayerState
 {
+    #region INSPECTOR FIELDS
+
+    [Header("Settings Overrides")]
+    [SerializeField]
+    private float _moveSpeed = 3f;
+    
+    #endregion // INSPECTOR FIELDS
+    
+    
     #region INTERNAL FIELDS
     
     // Cached References
@@ -20,7 +30,12 @@ public class PlayerIdleState : PlayerState
     {
         this.CacheReferences();
         
-        this.Type = StateType.Idle;
+        this.Type = StateType.Move;
+
+        if(this._settings != null && !this._useOverrideSettings)
+        {
+            this._moveSpeed = this._settings.MoveSpeed;
+        }
     }
     
     #endregion // UNITY METHODS
@@ -38,23 +53,20 @@ public class PlayerIdleState : PlayerState
 
 
     #region METHODS
-    public override void Enter()
-    {
-        base.Enter();
-        
-        // Stop the movement
-        this._entityBody.ZeroMove();
-    }
-
+    
     public override StateType CheckTransitions()
     {
-        if(this._cmdSystem.IsMoving())
+        if(!this._cmdSystem.IsMoving())
         {
-            return StateType.Move;
+            return StateType.Idle;
         }
         
         return StateType.Null;
     }
-    
+
+    public override void ProcessFixed()
+    {
+        this._entityBody.Move(this._cmdSystem.Move, this._moveSpeed);
+    }
     #endregion // METHODS
 }
