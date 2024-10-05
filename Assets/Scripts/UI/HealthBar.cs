@@ -3,12 +3,16 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour {
+    
+    [SerializeField]
+    private int playerMaxHealth = 8;
+    [SerializeField]
+    private int playerHealth = 6;
+    
     public Transform player;
     public Image section;
     
     private List<Image> sections = new();
-    private int playerMaxHealth = 8;
-    private int playerHealth = 6;
 
     private void OnEnable() {
         RecalculateHealthbar();
