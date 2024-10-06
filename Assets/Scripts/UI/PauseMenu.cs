@@ -5,22 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour {
     public Animator levelTransition;
-    public Animator pauseMenuAnimator;
-
-    private bool active = false;
-
-    private void Update() {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-            if (active) {
-                pauseMenuAnimator.SetTrigger("End");
-            }
-            else {
-                pauseMenuAnimator.SetTrigger("Start");
-            }
-
-            active = !active;
-        }
-    }
 
     public void QuitToMenu() {
         StartCoroutine(LoadLevel(0));
@@ -32,6 +16,7 @@ public class PauseMenu : MonoBehaviour {
     
     IEnumerator LoadLevel(int sceneIndex) {
         levelTransition.SetTrigger("Start");
+        Time.timeScale = 1;
         yield return new WaitForSeconds(1);
         SceneManager.LoadScene(sceneIndex);
     }

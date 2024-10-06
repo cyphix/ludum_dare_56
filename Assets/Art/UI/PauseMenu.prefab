@@ -88,8 +88,8 @@ GameObject:
   - component: {fileID: 1724366380257460901}
   - component: {fileID: 2108039692785526426}
   - component: {fileID: 7070570661753260546}
-  - component: {fileID: 4241101658776525258}
   - component: {fileID: 2019218971797153644}
+  - component: {fileID: 1281962504339232651}
   m_Layer: 5
   m_Name: PauseMenu
   m_TagString: Untagged
@@ -196,29 +196,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelTransition: {fileID: 0}
-  pauseMenuAnimator: {fileID: 4241101658776525258}
---- !u!95 &4241101658776525258
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1943538300802081051}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: d2c0d2f6c9a556f47bd902fdb689187d, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  pauseMenuAnimator: {fileID: 0}
 --- !u!225 &2019218971797153644
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -231,6 +209,28 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
+--- !u!95 &1281962504339232651
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1943538300802081051}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d2c0d2f6c9a556f47bd902fdb689187d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 2
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &3180670188592018228
 GameObject:
   m_ObjectHideFlags: 0
