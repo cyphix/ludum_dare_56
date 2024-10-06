@@ -86,6 +86,7 @@ public class Stomach : MonoBehaviour
     private void Initialize()
     {
         this._currentDigestionLeft = this._digestionTick;
+        this.StomachContentsEvent.Invoke(this._stomachContents);
     }
     
     #endregion // CONSTRUCTOR METHODS
@@ -96,6 +97,7 @@ public class Stomach : MonoBehaviour
     public void Consume(int foodValue)
     {
         this._stomachContents = this.IsStarving ? foodValue : this._stomachContents + foodValue ;
+        this.StomachContentsEvent.Invoke(this._stomachContents);
     }
     
     #endregion // METHODS
