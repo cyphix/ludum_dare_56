@@ -1,4 +1,8 @@
 # Specific Files
+**/DevModelPrep.unity
+**/DevModelPrep.unity.meta
+**/DevPrefabWorkspace.unity
+**/DevPrefabWorkspace.unity.meta
 
 
 
@@ -9,6 +13,12 @@
 # IDE Ignores
 **/.idea/
 **/.vscode/
+
+
+
+# File Types
+*.blend[0-9]*
+*.blend[0-9]*.meta
 
 
 
