@@ -10,7 +10,7 @@ public class StateMachine : MonoBehaviour, IStateMachine
     #region INSPECTOR FIELDS
 
     [SerializeField]
-    private StateType _startingState;
+    private StateType _startingState = StateType.Null;
 
     [Header("Debug")]
     [SerializeField]
@@ -65,7 +65,7 @@ public class StateMachine : MonoBehaviour, IStateMachine
 
 
     #region METHODS
-    
+
     public void AddState(StateType stateType, IState state)
     {
         if(!this._states.TryAdd(stateType, state))
@@ -74,8 +74,23 @@ public class StateMachine : MonoBehaviour, IStateMachine
         }
         else if(this._debugLogging)
         {
-            Debug.Log($"Added [{stateType}] state to the state dictionary.");
+            Debug.Log($"{DebugUtils.GameObjectNamePretty(this.gameObject)} Added [{stateType}] state to the state dictionary.");
         }
+    }
+    
+    public void ForceStateTransition(StateType stateType)
+    {
+        if(this._states.ContainsKey(stateType))
+        {
+            if(this._debugLogging)
+            {
+                Debug.LogWarning($"[{this.name}] does not have the state [{stateType}] to force.");
+            }
+            
+            return;
+        }
+        
+        this.Transition(stateType);
     }
     
     public void ProcessFixed()
@@ -133,6 +148,11 @@ public class StateMachine : MonoBehaviour, IStateMachine
 
     public bool ValidateStateMachine()
     {
+        if(this._debugLogging)
+        {
+            Debug.Log($"{DebugUtils.GameObjectNamePretty(this.gameObject)} {nameof(StateMachine)} Validate: StartingState [{this._startingState}], DictContainsStart [{this._states.ContainsKey(this._startingState)}], StateCount [{this._states.Count}]");
+        }
+        
         return (
             this._startingState != StateType.Null &&
             this._states.ContainsKey(this._startingState) &&
@@ -169,6 +189,11 @@ public class StateMachine : MonoBehaviour, IStateMachine
 
     private void Transition(StateType nextState)
     {
+        if(this._debugLogging)
+        {
+            Debug.Log($"{DebugUtils.GameObjectNamePretty(this.gameObject)} {nameof(StateMachine)} transitioning from [{this.CurrentState}] to [{nextState}]");
+        }
+        
         if(this.CurrentState != StateType.Null)
         {
             this._currentState.Exit();

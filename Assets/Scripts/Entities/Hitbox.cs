@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Events;
 
 
@@ -7,9 +8,18 @@ public class Hitbox : MonoBehaviour
 {
     #region EVENTS
 
-    public UnityEvent<GameObject, int> HitEvent;
+    public UnityEvent<IDamager> HitEvent;
     
     #endregion // EVENTS
+    
+    
+    #region INSPECTOR FIELDS
+    
+    [Header("Debug")]
+    [SerializeField]
+    private bool _debugLogging = false;
+    
+    #endregion // INSPECTOR FIELDS
     
     
     #region EVENT METHODS
@@ -18,7 +28,12 @@ public class Hitbox : MonoBehaviour
     {
         if(other.TryGetComponent<Hurtbox>(out Hurtbox hurtbox))
         {
-            this.HitEvent.Invoke(other.gameObject, 1);
+            if(this._debugLogging)
+            {
+                Debug.Log($"Hitbox collided with [{other.name}].");
+            }
+            
+            this.HitEvent.Invoke(hurtbox.Damager);
         }
     }
     

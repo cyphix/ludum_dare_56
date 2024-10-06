@@ -1,5 +1,6 @@
 ﻿using Entities.ScriptableObjects;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 
 
@@ -7,19 +8,18 @@ public abstract class EntityState : MonoBehaviour, IState
 {
     #region INSPECTOR FIELDS
 
-    [SerializeField]
-    protected EntitySettings _settings;
-
     [Header("Settings")]
     [SerializeField]
     protected bool _useOverrideSettings = false;
     [SerializeField]
-    protected bool _debugLogs = false;
+    protected bool _debugLogging = false;
     
     #endregion // INSPECTOR FIELDS
     
     
     #region INTERNAL FIELDS
+
+    protected EntitySettings _entitySettings;
     
     #endregion // INTERNAL FIELDS
     
@@ -41,7 +41,7 @@ public abstract class EntityState : MonoBehaviour, IState
     {
         this.IsActive = true;
         
-        if(this._debugLogs)
+        if(this._debugLogging)
         {
             Debug.Log($"State Entered: [{this.Type}]");
         }
@@ -51,7 +51,7 @@ public abstract class EntityState : MonoBehaviour, IState
     {
         this.IsActive = false;
         
-        if(this._debugLogs)
+        if(this._debugLogging)
         {
             Debug.Log($"State Exited: [{this.Type}]");
         }
@@ -60,6 +60,11 @@ public abstract class EntityState : MonoBehaviour, IState
     public virtual void ProcessFixed() { }
 
     public virtual void Process() { }
+
+    public void SetSettings(EntitySettings settings)
+    {
+        this._entitySettings = settings;
+    }
     
     #endregion // METHODS
 }
