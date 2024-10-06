@@ -80,7 +80,7 @@ public class StateMachine : MonoBehaviour, IStateMachine
     
     public void ForceStateTransition(StateType stateType)
     {
-        if(this._states.ContainsKey(stateType))
+        if(!this._states.ContainsKey(stateType))
         {
             if(this._debugLogging)
             {

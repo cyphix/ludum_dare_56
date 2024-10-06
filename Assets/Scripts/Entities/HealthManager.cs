@@ -73,12 +73,12 @@ public class HealthManager : MonoBehaviour, IHealthManager
     
     #region METHODS
     
-    public void TakeDamage(IDamager damager, bool invulIgnore = false)
+    public void TakeDamage(IDamager damager, bool invulIgnore = false, bool noInvul = true)
     {
         this.TakeDamage(damager.DamagerName, damager.AttackDamage, invulIgnore);
     }
 
-    public void TakeDamage(string damagerName, int amount, bool invulIgnore = false)
+    public void TakeDamage(string damagerName, int amount, bool invulIgnore = false, bool noInvul = true)
     {
         if(this.IsInvulnerable && !invulIgnore) { return; }
         
@@ -100,7 +100,10 @@ public class HealthManager : MonoBehaviour, IHealthManager
             this.DeathEvent.Invoke(damagerName);
         }
 
-        this.StartInvulnerability();
+        if(!noInvul)
+        {
+            this.StartInvulnerability();
+        }
     }
     
     #endregion // METHODS
