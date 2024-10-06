@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class HungerBar : MonoBehaviour {
     public Image digestionTimer;
     public Image stomachContentsIndicator;
+    public Animator hungerbarAnimator;
 
     public void SetDigestionTimer(float time) {
         digestionTimer.rectTransform.localScale = new Vector3(
@@ -14,6 +15,9 @@ public class HungerBar : MonoBehaviour {
     }
 
     public void SetStomachContents(int content) {
+        hungerbarAnimator.SetInteger("Contents", content);
+       
+        /*
         if (content <= 2) {
             stomachContentsIndicator.color = Color.red;
         } else if (content <= 6) {
@@ -22,9 +26,10 @@ public class HungerBar : MonoBehaviour {
         else {
             stomachContentsIndicator.color = Color.green;
         }
+        */
 
         stomachContentsIndicator.rectTransform.localScale = new Vector3(
-            content == 0 ? 0 : Mathf.Clamp(content, 0, 10f),
+            content <= 0 ? 1f : Mathf.Clamp(content / 10f, 0, 10f),
             1,
             1
         );

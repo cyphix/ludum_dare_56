@@ -6,6 +6,7 @@ public interface IStomach
 {
     #region PROPERTIES
     
+    public bool CanConsume { get; }
     public bool CanDigest { get; set; }
     public bool IsStarving { get; }
     

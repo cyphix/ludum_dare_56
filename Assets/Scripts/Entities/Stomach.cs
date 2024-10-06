@@ -5,7 +5,7 @@ using UnityEngine.Serialization;
 
 
 
-public class Stomach : MonoBehaviour
+public class Stomach : MonoBehaviour, IStomach
 {
     #region EVENTS
 
@@ -20,10 +20,12 @@ public class Stomach : MonoBehaviour
     [SerializeField]
     private int _stomachContents = 0;
     [SerializeField]
+    private int _maxCapacity = 10;
+    [SerializeField]
     private bool _canDigest = true;
     [SerializeField]
     [Tooltip("The time in seconds for digesting a point of food.")]
-    private float _digestionTick = 30f;
+    private float _digestionTick = 10f;
 
     [Header("Debug")]
     [SerializeField]
@@ -41,6 +43,7 @@ public class Stomach : MonoBehaviour
 
     #region PROPERTIES
 
+    public bool CanConsume { get; private set; } = true;
     public bool CanDigest
     {
         get { return this._canDigest; }
@@ -86,7 +89,12 @@ public class Stomach : MonoBehaviour
     private void Initialize()
     {
         this._currentDigestionLeft = this._digestionTick;
+<<<<<<< HEAD
         this.StomachContentsEvent.Invoke(this._stomachContents);
+=======
+
+        this.Consume(0);
+>>>>>>> fb97b3136224fd58ec7e9739e6008b4ea455c17f
     }
     
     #endregion // CONSTRUCTOR METHODS
@@ -96,8 +104,24 @@ public class Stomach : MonoBehaviour
 
     public void Consume(int foodValue)
     {
+        if(!this.CanConsume) { return; }
+        
         this._stomachContents = this.IsStarving ? foodValue : this._stomachContents + foodValue ;
+<<<<<<< HEAD
         this.StomachContentsEvent.Invoke(this._stomachContents);
+=======
+        
+        if(this._stomachContents >= this._maxCapacity)
+        {
+            this._stomachContents = this._maxCapacity;
+            this.CanConsume = false;
+            
+            if(this._debugLogging)
+            {
+                Debug.Log($"[{this.name}] is full and can't consume.", this);
+            }
+        }
+>>>>>>> fb97b3136224fd58ec7e9739e6008b4ea455c17f
     }
     
     #endregion // METHODS
@@ -114,6 +138,16 @@ public class Stomach : MonoBehaviour
                 this.TotalDigested++;
             }
             this._stomachContents--;
+
+            if(this._stomachContents < this._maxCapacity)
+            {
+                this.CanConsume = true;
+
+                if(this._debugLogging)
+                {
+                    Debug.Log($"[{this.name}] can consume again.", this);
+                }
+            }
 
             if(this._debugLogging)
             {
