@@ -58,6 +58,10 @@ public class EntityIdleState : EntityState
 
     public override StateType CheckTransitions()
     {
+        if(this._entityBody.HasQueuedKnockback)
+        {
+            return StateType.Knockback;
+        }
         if(this._cmdSystem.IsMoving())
         {
             return StateType.Move;

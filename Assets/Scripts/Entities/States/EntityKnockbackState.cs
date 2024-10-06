@@ -1,21 +1,23 @@
 ﻿using System;
+
 using UnityEngine;
 
 
 
 [RequireComponent(typeof(EntityBody), typeof(Rigidbody))]
-public class EntityMoveState : EntityState
+public class EntityKnockbackState : EntityState
 {
     #region INSPECTOR FIELDS
 
-    [Header("Settings Overrides")]
     [SerializeField]
-    private float _moveSpeed = 3f;
+    private float _lockStateTime = 0.1f;
     
     #endregion // INSPECTOR FIELDS
     
     
     #region INTERNAL FIELDS
+
+    private float _timer = 0f;
     
     // Cached References
     private ICmdSystem _cmdSystem;
@@ -34,11 +36,6 @@ public class EntityMoveState : EntityState
     private void Start()
     {
         this.Initialize();
-        
-        if(this._entitySettings != null && !this._useOverrideSettings)
-        {
-            this._moveSpeed = this._entitySettings.MoveSpeed;
-        }
     }
     
     #endregion // UNITY METHODS
@@ -56,22 +53,31 @@ public class EntityMoveState : EntityState
     {
         this.CacheReferences();
         
-        this.Type = StateType.Move;
+        this.Type = StateType.Knockback;
     }
     
     #endregion // CONSTRUCTORS
 
 
     #region METHODS
-    
+    public override void Enter()
+    {
+        base.Enter();
+
+        this._timer = 0f;
+        
+        this._entityBody.DoKnockback();
+    }
+
     public override StateType CheckTransitions()
     {
-        if(this._entityBody.HasQueuedKnockback)
+        if(this._timer >= this._lockStateTime)
         {
-            return StateType.Knockback;
-        }
-        if(!this._cmdSystem.IsMoving())
-        {
+            if(this._cmdSystem.IsMoving())
+            {
+                return StateType.Move;
+            }
+
             return StateType.Idle;
         }
         
@@ -82,15 +88,7 @@ public class EntityMoveState : EntityState
     {
         if(this.IsActive)
         {
-            this._entityBody.UpdateFacing(this._cmdSystem.Move);
-        }
-    }
-
-    public override void ProcessFixed()
-    {
-        if(this.IsActive)
-        {
-            this._entityBody.Move(this._cmdSystem.Move, this._moveSpeed);
+            this._timer += Time.deltaTime;
         }
     }
     #endregion // METHODS

@@ -1,5 +1,6 @@
 ﻿using System;
-using Random = UnityEngine.Random;
+
+using UnityEngine;
 
 
 
@@ -17,6 +18,7 @@ public interface IStateMachine
     #region METHODS
 
     public void AddState(StateType stateType, IState state);
+    public void ForceStateTransition(StateType stateType);
     public void ProcessFixed();
     public void RemoveState(StateType stateType);
     public void StartStateMachine();

@@ -24,6 +24,8 @@ public class Stomach : MonoBehaviour, IStomach
     [SerializeField]
     private bool _canDigest = true;
     [SerializeField]
+    private bool _canStarve = true;
+    [SerializeField]
     [Tooltip("The time in seconds for digesting a point of food.")]
     private float _digestionTick = 10f;
 
@@ -123,6 +125,8 @@ public class Stomach : MonoBehaviour, IStomach
     
     private void Digest()
     {
+        if(!this._canStarve && this._stomachContents <= 0) { return; }
+        
         if(this.CanDigest)
         {
             if(this._stomachContents > 0)

@@ -1,5 +1,7 @@
 ﻿using System;
 
+using Entities.ScriptableObjects;
+
 
 
 public interface IState
@@ -20,6 +22,7 @@ public interface IState
     public void Exit();
     public void ProcessFixed();
     public void Process();
+    public void SetSettings(EntitySettings settings);
 
     #endregion // METHODS
 }

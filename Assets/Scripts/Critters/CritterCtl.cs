@@ -1,16 +1,14 @@
 ﻿using System;
-
+using Entities.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.Events;
-
-using Entities.ScriptableObjects;
 
 
 
 [RequireComponent(
-    typeof(HealthManager), typeof(PlayerCmdSys)
+    typeof(CritterCmdSys), typeof(HealthManager)
 )]
-public class PlayerCtl : MonoBehaviour, IDamager, IEntityCtl
+public class CritterCtl : MonoBehaviour, IDamager, IEntityCtl
 {
     #region EVENTS
 
@@ -21,16 +19,8 @@ public class PlayerCtl : MonoBehaviour, IDamager, IEntityCtl
     
     #region INSPECTOR FIELDS
 
-    [Header("Character")]
     [SerializeField]
-    private int _starvationDamage = 1;
-    [SerializeField]
-    private int _attackDamage = 1;
-    [SerializeField]
-    private bool _causesKnockback = true;
-    [SerializeField]
-    private float _knockbackForce = 20f;
-    
+    private bool _needsFood = false;
     [SerializeField]
     private EntitySettings _entitySettings;
     
@@ -39,8 +29,8 @@ public class PlayerCtl : MonoBehaviour, IDamager, IEntityCtl
     private bool _debugLogging = false;
     
     #endregion // INSPECTOR FIELDS
-
-
+    
+    
     #region INTERNAL FIELDS
 
     // Cached References
@@ -51,19 +41,20 @@ public class PlayerCtl : MonoBehaviour, IDamager, IEntityCtl
     private IStomach _stomach;
     
     #endregion // INTERNAL FIELDS
-
-
+    
+    
     #region PROPERTIES
     
-    public int AttackDamage { get { return this._attackDamage; } }
-    public bool CauseKnockback { get { return this._causesKnockback; } }
-    public string DamagerName { get { return this.name; } }
-    public float KnockbackForce { get { return this._knockbackForce; } }
-    public Vector3 Position { get { return this.transform.position; } }
+    // TODO
+    public int AttackDamage { get; }
+    public bool CauseKnockback { get; }
+    public string DamagerName { get; }
+    public float KnockbackForce { get; }
+    public Vector3 Position { get; }
     
     #endregion // PROPERTIES
-    
-    
+
+
     #region UNITY METHODS
     
     private void Awake()
@@ -85,7 +76,7 @@ public class PlayerCtl : MonoBehaviour, IDamager, IEntityCtl
             Debug.LogError($"[{nameof(this._sm)}] failed to validate.");
         }
     }
-
+    
     public void Update()
     {
         if(this._sm.IsStateMachineRunning)
@@ -142,12 +133,17 @@ public class PlayerCtl : MonoBehaviour, IDamager, IEntityCtl
 
 
     #region EVENT METHODS
-
+    
     public void OnDeath(string damagerName)
     {
+        if(this._debugLogging)
+        {
+            Debug.Log($"{DebugUtils.GameObjectNamePretty(this.gameObject)} Forcing Death state in StateMachine.");
+        }
+        
         this._sm.ForceStateTransition(StateType.Death);
     }
-
+    
     public void OnHit(IDamager damager)
     {
         if(this._debugLogging)
@@ -165,28 +161,15 @@ public class PlayerCtl : MonoBehaviour, IDamager, IEntityCtl
         
         this._healthManager.TakeDamage(damager);
     }
-
-    public void OnStomachContentsChange(int stomachContents)
-    {
-        if(stomachContents < 0)
-        {
-            if(this._debugLogging)
-            {
-                Debug.Log($"[{this.name}] takes starvation damage of [{this._starvationDamage}]");
-            }
-            
-            this._healthManager.TakeDamage("Starvation", this._starvationDamage, true);
-        }
-    }
     
     #endregion // EVENT METHODS
 
 
     #region METHODS
-
+    
     public bool CanConsume()
     {
-        if(this._stomach != null)
+        if(this._needsFood && this._stomach != null)
         {
             return this._stomach.CanConsume;
         }
@@ -201,6 +184,8 @@ public class PlayerCtl : MonoBehaviour, IDamager, IEntityCtl
 
     public void ConsumeFood(int foodValue)
     {
+        if(!this._needsFood) { return; }
+        
         if(this._debugLogging)
         {
             Debug.Log($"[{this.name}] consumed [{foodValue}] points of food.");
@@ -210,9 +195,4 @@ public class PlayerCtl : MonoBehaviour, IDamager, IEntityCtl
     }
     
     #endregion // METHODS
-
-
-    #region INTERNAL METHODS
-    
-    #endregion // INTERNAL METHODS
 }
