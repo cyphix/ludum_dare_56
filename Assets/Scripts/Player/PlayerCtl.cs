@@ -37,8 +37,14 @@ public class PlayerCtl : MonoBehaviour, IEntityCtl
     // Cached References
     private ICmdSystem _cmdSystem;
     private IStateMachine _sm;
+    private IStomach _stomach;
     
     #endregion // INTERNAL FIELDS
+
+
+    #region PROPERTIES
+    
+    #endregion // PROPERTIES
     
     
     #region UNITY METHODS
@@ -103,6 +109,8 @@ public class PlayerCtl : MonoBehaviour, IEntityCtl
     {
         this._cmdSystem ??= GetComponent<ICmdSystem>();
         this._sm ??= GetComponent<IStateMachine>();
+        
+        TryGetComponent<IStomach>(out this._stomach);
     }
 
     private void Initialize()
@@ -130,6 +138,21 @@ public class PlayerCtl : MonoBehaviour, IEntityCtl
 
 
     #region METHODS
+
+    public bool CanConsume()
+    {
+        if(this._stomach != null)
+        {
+            return this._stomach.CanConsume;
+        }
+
+        if(this._debugLogging)
+        {
+            Debug.LogWarning($"[{this.name}]'s Stomach component is missing!");
+        }
+        
+        return false;
+    }
 
     public void ConsumeFood(int foodValue)
     {

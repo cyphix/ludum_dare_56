@@ -22,6 +22,12 @@ public class Food : MonoBehaviour
 
 
     #region UNITY METHODS
+    
+    private void Start()
+    {
+        this.transform.localScale *= this._foodValue;
+    }
+
     public void Update()
     {
         if(this._canRot)
@@ -34,7 +40,20 @@ public class Food : MonoBehaviour
             }
         }
     }
+    
     #endregion // UNITY METHODS
+
+
+    #region CONSTRUCTOR METHODS
+
+    public void CreateFood(int foodValue=1, float rotTime=15f, bool canRot=true)
+    {
+        this._foodValue = foodValue;
+        this._rotTime = rotTime;
+        this._canRot = canRot;
+    }
+    
+    #endregion // CONSTRUCTOR METHODS
 
 
     #region EVENT METHODS
@@ -43,6 +62,14 @@ public class Food : MonoBehaviour
     {
         if(other.TryGetComponent<IEntityCtl>(out IEntityCtl entityCtl))
         {
+            if(!entityCtl.CanConsume())
+            {
+                if(this._debugLogging)
+                {
+                    Debug.Log($"[{other.name}] cannot consume [{this.name}].", this);
+                }
+                return;
+            }
             entityCtl.ConsumeFood(this._foodValue);
             
             if(this._debugLogging)
