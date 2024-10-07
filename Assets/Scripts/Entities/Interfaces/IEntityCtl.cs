@@ -1,10 +1,15 @@
 ﻿using System;
 
+using UnityEngine;
+
 
 
 public interface IEntityCtl
 {
     #region PROPERTIES
+    
+    public string SourceName { get; }
+    public Vector3 Position { get; }
     
     #endregion // PROPERTIES
     
