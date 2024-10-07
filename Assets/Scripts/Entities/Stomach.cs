@@ -16,7 +16,7 @@ public class Stomach : MonoBehaviour, IStomach
     /// This event takes two float parameters:
     /// <list type="bullet">
     /// <item>
-    /// <description>The first parameter represents the elapsed time of the digestion process tick.</description>
+    /// <description>The first parameter represents the time left of the digestion process tick.</description>
     /// </item>
     /// <item>
     /// <description>The second parameter represents the total time required for the digestion process tick.</description>
