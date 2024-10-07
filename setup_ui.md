@@ -11,8 +11,7 @@
 
 ## Dependencies
 
-example:
-* GameObject > ChildObject
+* ex: GameObject > ChildObject
 	- Dependency
 
 * GameStateManager
@@ -27,8 +26,7 @@ example:
 
 ## Events:
 
-example:
-* GameObject > Event
+* ex: GameObject > Event
 	- GameObject > Method
 
 * Health Manager > Death Event
