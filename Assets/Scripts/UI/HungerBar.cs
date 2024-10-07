@@ -15,7 +15,7 @@ public class HungerBar : MonoBehaviour {
     }
 
     public void SetStomachContents(int contents, int maxContents) {
-        if (contents < 0) {
+        if (contents < 1) {
             starvationAnimation.SetBool("Starving", true);
         }
         else {
