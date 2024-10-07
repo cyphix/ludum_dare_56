@@ -12,6 +12,8 @@ public class EntityDetector : MonoBehaviour, IEntityDetector
     #region INSPECTOR FIELDS
 
     [SerializeField]
+    private bool _useFOV = false;
+    [SerializeField]
     private float _detectorRange = 2.5f;
     [SerializeField]
     private float _fovAngle = 60f;
@@ -19,10 +21,6 @@ public class EntityDetector : MonoBehaviour, IEntityDetector
     private LayerMask _blockingMask;
     [SerializeField]
     private float _checkInterval = 0.2f;
-
-    [Header("Sensor Options")]
-    [SerializeField]
-    private bool _canSpotFood = true;
     
     [Header("Debug")]
     [SerializeField]
@@ -46,16 +44,14 @@ public class EntityDetector : MonoBehaviour, IEntityDetector
     private SphereCollider _collider;
     
     // Tags
-    private TagHandle _critterTag;
-    private TagHandle _foodTag;
-    private TagHandle _hazardTag;
-    private TagHandle _playerTag;
+    private TagHandle _tag;
     
     #endregion // INTERNAL FIELDS
     
     
     #region PROPERTIES
 
+    public List<Collider> GetSpottedEntities { get { return this._detectedList; } }
     public bool HasSpottedEntities { get; private set; } = false;
 
     #endregion // PROPERTIES
@@ -114,10 +110,7 @@ public class EntityDetector : MonoBehaviour, IEntityDetector
 
     private void InitTagRefs()
     {
-        this._critterTag = TagHandle.GetExistingTag("Critter");
-        this._foodTag = TagHandle.GetExistingTag("Food");
-        this._hazardTag = TagHandle.GetExistingTag("Hazard");
-        this._playerTag = TagHandle.GetExistingTag("Player");
+        this._tag = TagHandle.GetExistingTag("Player");
     }
     
     #endregion // CONSTRUCTOR METHODS
@@ -165,20 +158,29 @@ public class EntityDetector : MonoBehaviour, IEntityDetector
                 this._detectedList.Remove(other);
             }
 
-            this._fovList.Clear();
-            foreach(Collider other in this._detectedList)
+            if(this._useFOV)
             {
-                if(other == null) { continue; }
-                
-                if(this.CheckInFOV(other))
+                this._fovList.Clear();
+                foreach(Collider other in this._detectedList)
                 {
-                    this._fovList.Add(other);
+                    if(other == null) { continue; }
+                
+                    if(this.CheckInFOV(other))
+                    {
+                        this._fovList.Add(other);
+                    }
                 }
-            }
             
-            if(this._debugLogging)
+                if(this._debugLogging)
+                {
+                    Debug.Log($"Detected in FOV Count: [{this._fovList.Count}]");
+                }
+
+                this.HasSpottedEntities = this._fovList.Count > 0;
+            }
+            else
             {
-                Debug.Log($"Detected in FOV Count: [{this._fovList.Count}]");
+                this.HasSpottedEntities = this._detectedList.Count > 0;
             }
             
             yield return new WaitForSeconds(this._checkInterval);
@@ -228,11 +230,7 @@ public class EntityDetector : MonoBehaviour, IEntityDetector
 
     private bool Detectable(Collider other)
     {
-        return (
-            (this._canSpotFood && other.CompareTag(this._foodTag)) ||
-            other.CompareTag(this._critterTag) ||
-            other.CompareTag(this._playerTag)
-        );
+        return other.CompareTag(this._tag);
     }
 
     #endregion // INTERNAL METHODS

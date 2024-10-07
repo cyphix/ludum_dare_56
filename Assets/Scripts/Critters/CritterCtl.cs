@@ -56,7 +56,6 @@ public class CritterCtl : MonoBehaviour, IDamager, IEntityCtl
     
     #region PROPERTIES
     
-    // TODO
     public int AttackDamage { get { return this._attackDamage; } }
     public bool CauseKnockback { get { return this._causesKnockback; } }
     public float KnockbackForce { get { return this._knockbackForce; } }

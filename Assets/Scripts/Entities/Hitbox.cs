@@ -48,7 +48,7 @@ public class Hitbox : MonoBehaviour
         {
             if(this._debugLogging)
             {
-                Debug.Log($"Hitbox collided with [{other.name}].");
+                Debug.Log($"Hitbox collided with [{other.name}].", this);
             }
             
             this.HitEvent.Invoke(hurtbox.Damager);

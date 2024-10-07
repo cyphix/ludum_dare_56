@@ -7,9 +7,9 @@ public class CritterCmdSys : MonoBehaviour, ICmdSystem
 {
     #region PROPERTIES
     
-    public Vector2 Move { get; }
-    public float XMove { get; }
-    public float YMove { get; }
+    public Vector2 Move { get; } = Vector2.zero;
+    public float XMove { get; } = 0f;
+    public float YMove { get; } = 0f;
     
     #endregion // PROPERTIES
 
@@ -18,18 +18,18 @@ public class CritterCmdSys : MonoBehaviour, ICmdSystem
     
     public bool IsMoving()
     {
-        // TODO
+        // HACK
         return false;
     }
 
     public void Process()
     {
-        // TODO
+        // HACK
     }
 
     public void ProcessFixed()
     {
-        // TODO
+        // HACK
     }
     
     #endregion // METHODS

@@ -9,6 +9,7 @@ TagManager:
   - Hitbox
   - Hurtbox
   - Food
+  - Apex
   layers:
   - Default
   - TransparentFX
@@ -18,7 +19,7 @@ TagManager:
   - UI
   - Player
   - Critter
-  - 
+  - Apex
   - 
   - Obstruction
   - 

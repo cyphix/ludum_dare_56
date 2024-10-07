@@ -74,8 +74,10 @@ public class EntityBody : MonoBehaviour, IEntityBody
         {
             Debug.Log($"[{this.name}] knockback executing: direction>[{this._knockbackDirection}], force>[{this._knockbackForce}]");
         }
-        
-        this._rigidbody.AddForce(this._knockbackDirection * this._knockbackForce, ForceMode.Impulse);
+
+        Vector3 kb = this._knockbackDirection * this._knockbackForce;
+        kb.y = 0f;
+        this._rigidbody.AddForce(kb, ForceMode.Impulse);
 
         this.HasQueuedKnockback = false;
     }

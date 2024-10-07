@@ -115,7 +115,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _threatLevel: 1
   _damage: 1
-  _causesKnockback: 0
+  _causesKnockback: 1
   _knockbackForce: 20
 --- !u!136 &2963490375668735484
 CapsuleCollider:

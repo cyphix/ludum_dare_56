@@ -4,9 +4,17 @@
 
 public abstract class BTNode : MonoBehaviour
 {
+    #region INSPECTOR FIELDS
+
+    [SerializeField]
+    private BTNodeState _state;
+    
+    #endregion // INSPECTOR FIELDS
+    
+    
     #region PROPERTIES
     
-    public BTNodeState State { get; protected set; }
+    public BTNodeState State { get { return this._state; } }
     
     #endregion // PROPERTIES
 
