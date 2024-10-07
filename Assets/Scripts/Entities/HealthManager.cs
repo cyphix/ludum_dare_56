@@ -2,6 +2,7 @@
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 
 
@@ -22,10 +23,16 @@ public class HealthManager : MonoBehaviour, IHealthManager
     private int _health = 5;
     [SerializeField]
     private int _maxHealth = 5;
+    
+    [Header("Invulnerability")]
     [SerializeField]
     private bool _hasDamageCooldown = true;
     [SerializeField]
     private float _invulnerableTime = 1f;
+    [SerializeField]
+    private float _blinkPeriod = 0.2f;
+    [SerializeField]
+    private Renderer _renderer;
     
     [Header("Debug")]
     [SerializeField]
@@ -37,6 +44,7 @@ public class HealthManager : MonoBehaviour, IHealthManager
     #region INTERNAL FIELDS
 
     private float _invulTimer = 0f;
+    private bool _blinkVisible = true;
     
     #endregion // INTERNAL FIELDS
 
@@ -49,7 +57,7 @@ public class HealthManager : MonoBehaviour, IHealthManager
 
 
     #region UNITY METHODS
-    
+
     private void Start()
     {
         this.MaxHealthEvent.Invoke(this._maxHealth);
@@ -62,7 +70,7 @@ public class HealthManager : MonoBehaviour, IHealthManager
         
         this._invulTimer += Time.deltaTime;
 
-        if(this._invulTimer >= this._invulnerableTime)
+        if(this.IsInvulnerable && this._invulTimer >= this._invulnerableTime)
         {
             this.StopInvulnerability();
         }
@@ -73,12 +81,12 @@ public class HealthManager : MonoBehaviour, IHealthManager
     
     #region METHODS
     
-    public void TakeDamage(IDamager damager, bool invulIgnore = false, bool noInvul = true)
+    public void TakeDamage(IDamager damager, bool invulIgnore = false, bool noInvul = false)
     {
         this.TakeDamage(damager.SourceName, damager.AttackDamage, invulIgnore);
     }
 
-    public void TakeDamage(string damagerName, int amount, bool invulIgnore = false, bool noInvul = true)
+    public void TakeDamage(string damagerName, int amount, bool invulIgnore = false, bool noInvul = false)
     {
         if(this.IsInvulnerable && !invulIgnore) { return; }
         
@@ -109,24 +117,24 @@ public class HealthManager : MonoBehaviour, IHealthManager
     #endregion // METHODS
 
 
-    #region INTERNAL FIELDS
-
-    private void StopInvulnerability()
+    #region INTERNAL METHODS
+    
+    private void InvulnerabilityPulse()
     {
-        if(this._debugLogging)
-        {
-            Debug.Log($"[{this.name}] is no longer invulnerable.");
-        }
-        
-        this.IsInvulnerable = false;
-        this._invulTimer = 0f;
+        this._blinkVisible = !this._blinkVisible;
+        this._renderer.enabled = this._blinkVisible;
     }
-
+    
     private void StartInvulnerability()
     {
         if(this._debugLogging)
         {
             Debug.Log($"{DebugUtils.GameObjectNamePretty(this.gameObject)} is invulnerable.");
+        }
+
+        if(this._renderer != null)
+        {
+            InvokeRepeating(nameof(InvulnerabilityPulse), this._blinkPeriod, this._blinkPeriod);
         }
         
         if(!this._hasDamageCooldown) { return; }
@@ -134,6 +142,24 @@ public class HealthManager : MonoBehaviour, IHealthManager
         this.IsInvulnerable = true;
         this._invulTimer = 0f;
     }
+
+    private void StopInvulnerability()
+    {
+        if(this._debugLogging)
+        {
+            Debug.Log($"{DebugUtils.GameObjectNamePretty(this.gameObject)} is no longer invulnerable.");
+        }
+        
+        if(this._renderer != null)
+        {
+            CancelInvoke(nameof(InvulnerabilityPulse));
+            this._blinkVisible = true;
+            this._renderer.enabled = true;
+        }
+        
+        this.IsInvulnerable = false;
+        this._invulTimer = 0f;
+    }
     
-    #endregion // INTERNAL FIELDS
+    #endregion // INTERNAL METHODS
 }
