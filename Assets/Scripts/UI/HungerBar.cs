@@ -14,12 +14,8 @@ public class HungerBar : MonoBehaviour {
         );
     }
 
-    public void SetStomachContents(int contents) {
-        Debug.Log("Contents!!!");
-        Debug.Log(contents);
-        int max = 10;
-
-        if (contents < 1) {
+    public void SetStomachContents(int contents, int maxContents) {
+        if (contents < 0) {
             starvationAnimation.SetBool("Starving", true);
         }
         else {
@@ -27,7 +23,7 @@ public class HungerBar : MonoBehaviour {
         }
         
         stomachContentsElement.transform.localScale = new Vector3(
-            contents / max,
+            Mathf.Max(contents, 0) * 1f / maxContents,
             1,
             1
         );

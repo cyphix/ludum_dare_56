@@ -1,10 +1,11 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class GameStateManager : MonoBehaviour {
     public Animator pauseMenuAnimator;
-    public Animator gameOverMenuAnimator;
+    public GameOverScreen gameOverScreen;
     
     private ISActions actions;
     private InputAction pauseAction;
@@ -45,15 +46,9 @@ public class GameStateManager : MonoBehaviour {
         Time.timeScale = 1;
     }
 
-    public void SetGameOver() {
+    public void SetGameOver(String reason) {
         gameState = GameState.GAMEOVER;
+        gameOverScreen.SetGameOver(reason);
         Time.timeScale = 0;
-        gameOverMenuAnimator.SetTrigger("Start");
-    }
-
-    public void CheckPlayerHealth(int health) {
-        if (health <= 0) {
-            SetGameOver();
-        }
     }
 }

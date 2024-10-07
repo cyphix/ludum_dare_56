@@ -3,7 +3,8 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PauseMenu : MonoBehaviour {
+public class NavigationMenu
+    : MonoBehaviour {
     public Animator levelTransition;
 
     public void QuitToMenu() {
