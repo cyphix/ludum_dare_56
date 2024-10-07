@@ -9,7 +9,7 @@ public class GoalTracker : MonoBehaviour {
     
     public void SetTracker(int current, int goal) {
         currentDigestedFoodText.SetText(current.ToString());
-        currentDigestedFoodText.SetText(current.ToString());
+        targetDigestedFoodText.SetText(goal.ToString());
 
         if (current >= goal) {
             currentDigestedFoodText.color = Color.green;

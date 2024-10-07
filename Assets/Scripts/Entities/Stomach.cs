@@ -40,6 +40,9 @@ public class Stomach : MonoBehaviour, IStomach
     /// </remarks>
     public UnityEvent<int, int> StomachContentsEvent;
     
+    public UnityEvent<int, int> GoalEvent;
+    public UnityEvent<string> WinEvent;
+    
     #endregion // EVENTS
     
     
@@ -56,6 +59,10 @@ public class Stomach : MonoBehaviour, IStomach
     [SerializeField]
     [Tooltip("The time in seconds for digesting a point of food.")]
     private float _digestionTick = 10f;
+    
+    [Header("Win Condition - Doesn't Belong Here")]
+    [SerializeField]
+    private int _winFoodAmount = 5;
 
     [Header("Debug")]
     [SerializeField]
@@ -82,7 +89,7 @@ public class Stomach : MonoBehaviour, IStomach
     public bool IsStarving { get { return this._stomachContents < 0; } }
     
     public int StomachContents { get { return this._stomachContents; } }
-    public int TotalDigested { get; private set; }
+    public int TotalDigested { get; private set; } = 0;
     
     #endregion // PROPERTIES
 
@@ -94,6 +101,7 @@ public class Stomach : MonoBehaviour, IStomach
         this.Initialize();
         
         this.StomachContentsEvent.Invoke(this._stomachContents, this._maxCapacity);
+        this.GoalEvent.Invoke(this.TotalDigested, this._winFoodAmount);
     }
 
     private void Update()
@@ -164,6 +172,8 @@ public class Stomach : MonoBehaviour, IStomach
             if(this._stomachContents > 0)
             {
                 this.TotalDigested++;
+                
+                this.UpdateGoal();
             }
             this._stomachContents--;
 
@@ -187,6 +197,26 @@ public class Stomach : MonoBehaviour, IStomach
         else
         {
             Debug.LogWarning($"[{this.name}] attempted to digest even though it is set off.", this);
+        }
+    }
+
+    private void UpdateGoal()
+    {
+        this.GoalEvent.Invoke(this.TotalDigested, this._winFoodAmount);
+        
+        this.WinCheck();
+    }
+
+    private void WinCheck()
+    {
+        if(this.TotalDigested >= this._winFoodAmount)
+        {
+            if(this._debugLogging)
+            {
+                Debug.Log($"Win with [{this.TotalDigested}] food.", this);
+            }
+            
+            this.WinEvent.Invoke($"you ate your fill of {this._winFoodAmount}!");
         }
     }
     
