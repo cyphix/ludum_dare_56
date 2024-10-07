@@ -6,6 +6,20 @@ using UnityEngine;
 [RequireComponent(typeof(SphereCollider))]
 public class EntityDetector : MonoBehaviour, IEntityDetector
 {
+    #region INSPECTOR FIELDS
+
+    [SerializeField]
+    private float _detectorRange = 2.5f;
+    
+    [Header("Debug")]
+    [SerializeField]
+    protected bool _debugLogging = false;
+    [SerializeField]
+    protected bool _debugVisuals = false;
+    
+    #endregion // INSPECTOR FIELDS
+    
+    
     #region INTERNAL FIELDS
     
     // Cached References
@@ -22,6 +36,11 @@ public class EntityDetector : MonoBehaviour, IEntityDetector
 
 
     #region UNITY METHODS
+    
+    private void Awake()
+    {
+        this.Initialize();
+    }
     
     private void Start()
     {
@@ -41,6 +60,12 @@ public class EntityDetector : MonoBehaviour, IEntityDetector
     private void Initialize()
     {
         this.CacheReferences();
+
+        if(this._collider != null)
+        {
+            this._collider.isTrigger = true;
+            this._collider.radius = this._detectorRange;
+        }
     }
     
     #endregion // CONSTRUCTOR METHODS
@@ -54,4 +79,23 @@ public class EntityDetector : MonoBehaviour, IEntityDetector
     }
     
     #endregion // EVENT METHODS
+
+
+    #region GIZMOS METHODS
+    
+    private void OnDrawGizmos()
+    {
+        if(Application.isEditor && this._debugVisuals)
+        {
+            if(!Application.isPlaying)
+            {
+                this.CacheReferences();
+            }
+            
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawWireSphere(this._collider.bounds.center, this._collider.radius);
+        }
+    }
+    
+    #endregion // GIZMOS METHODS
 }
