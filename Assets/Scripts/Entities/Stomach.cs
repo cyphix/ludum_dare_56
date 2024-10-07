@@ -13,7 +13,7 @@ public class Stomach : MonoBehaviour, IStomach
     /// Invoked to track the digestion process over time.
     /// </summary>
     /// <remarks>
-    /// This event takes two float parameters:
+    /// This event takes two <c>float</c> parameters:
     /// <list type="bullet">
     /// <item>
     /// <description>The first parameter represents the time left of the digestion process tick.</description>
@@ -24,7 +24,21 @@ public class Stomach : MonoBehaviour, IStomach
     /// </list>
     /// </remarks>
     public UnityEvent<float, float> DigestionTimerEvent;
-    public UnityEvent<int> StomachContentsEvent;
+    /// <summary>
+    /// Invoked when the contents of the stomach changes.
+    /// </summary>
+    /// <remarks>
+    /// This event takes two <c>int</c> parameters:
+    /// <list type="bullet">
+    /// <item>
+    /// <description>The first parameter represents the contents in the stomach.</description>
+    /// </item>
+    /// <item>
+    /// <description>The second parameter represents the max amount the stomach can hold.</description>
+    /// </item>
+    /// </list>
+    /// </remarks>
+    public UnityEvent<int, int> StomachContentsEvent;
     
     #endregion // EVENTS
     
@@ -78,6 +92,8 @@ public class Stomach : MonoBehaviour, IStomach
     private void Start()
     {
         this.Initialize();
+        
+        this.StomachContentsEvent.Invoke(this._stomachContents, this._maxCapacity);
     }
 
     private void Update()
@@ -164,7 +180,7 @@ public class Stomach : MonoBehaviour, IStomach
                 Debug.Log($"Stomach contents digested, current total: [{this._stomachContents}]");
             }
             
-            this.StomachContentsEvent.Invoke(this._stomachContents);
+            this.StomachContentsEvent.Invoke(this._stomachContents, this._maxCapacity);
         }
         else
         {
