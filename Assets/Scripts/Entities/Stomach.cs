@@ -146,6 +146,8 @@ public class Stomach : MonoBehaviour, IStomach
                 Debug.Log($"[{this.name}] is full and can't consume.", this);
             }
         }
+        
+        this.StomachContentsEvent.Invoke(this._stomachContents, this._maxCapacity);
     }
     
     #endregion // METHODS
