@@ -20,13 +20,31 @@ public class Hitbox : MonoBehaviour
     private bool _debugLogging = false;
     
     #endregion // INSPECTOR FIELDS
+
+
+    #region INTERNAL FIELDS
+    
+    // Cached References
+    private TagHandle _hurtboxTag;
+    
+    #endregion // INTERNAL FIELDS
+
+
+    #region UNITY METHODS
+    
+    private void OnEnable()
+    {
+        this._hurtboxTag = TagHandle.GetExistingTag("Hurtbox");
+    }
+    
+    #endregion // UNITY METHODS
     
     
     #region EVENT METHODS
     
     private void OnTriggerEnter(Collider other)
     {
-        if(other.TryGetComponent<Hurtbox>(out Hurtbox hurtbox))
+        if(other.CompareTag(this._hurtboxTag) && other.TryGetComponent<Hurtbox>(out Hurtbox hurtbox))
         {
             if(this._debugLogging)
             {
