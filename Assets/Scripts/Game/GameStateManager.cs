@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 public class GameStateManager : MonoBehaviour {
     public Animator pauseMenuAnimator;
     public Animator gameOverMenuAnimator;
-    public GameObject gameOverMenu;
     
     private ISActions actions;
     private InputAction pauseAction;
