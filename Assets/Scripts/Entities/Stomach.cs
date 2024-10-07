@@ -9,7 +9,21 @@ public class Stomach : MonoBehaviour, IStomach
 {
     #region EVENTS
 
-    public UnityEvent<float> DigestionTimerEvent;
+    /// <summary>
+    /// Invoked to track the digestion process over time.
+    /// </summary>
+    /// <remarks>
+    /// This event takes two float parameters:
+    /// <list type="bullet">
+    /// <item>
+    /// <description>The first parameter represents the time left of the digestion process tick.</description>
+    /// </item>
+    /// <item>
+    /// <description>The second parameter represents the total time required for the digestion process tick.</description>
+    /// </item>
+    /// </list>
+    /// </remarks>
+    public UnityEvent<float, float> DigestionTimerEvent;
     public UnityEvent<int> StomachContentsEvent;
     
     #endregion // EVENTS
@@ -79,7 +93,7 @@ public class Stomach : MonoBehaviour, IStomach
                 this._currentDigestionLeft = this._digestionTick - this._currentDigestionLeft;
             }
             
-            this.DigestionTimerEvent.Invoke(this._currentDigestionLeft);
+            this.DigestionTimerEvent.Invoke(this._currentDigestionLeft, this._digestionTick);
         }
     }
 

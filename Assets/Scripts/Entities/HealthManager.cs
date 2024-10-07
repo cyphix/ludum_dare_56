@@ -75,7 +75,7 @@ public class HealthManager : MonoBehaviour, IHealthManager
     
     public void TakeDamage(IDamager damager, bool invulIgnore = false, bool noInvul = true)
     {
-        this.TakeDamage(damager.DamagerName, damager.AttackDamage, invulIgnore);
+        this.TakeDamage(damager.SourceName, damager.AttackDamage, invulIgnore);
     }
 
     public void TakeDamage(string damagerName, int amount, bool invulIgnore = false, bool noInvul = true)

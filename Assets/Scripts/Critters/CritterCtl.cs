@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 
 [RequireComponent(
-    typeof(CritterCmdSys), typeof(HealthManager)
+    typeof(HealthManager)
 )]
 public class CritterCtl : MonoBehaviour, IDamager, IEntityCtl
 {
@@ -19,14 +19,25 @@ public class CritterCtl : MonoBehaviour, IDamager, IEntityCtl
     
     #region INSPECTOR FIELDS
 
+    [Header("Temp - Needs to go to EntitySettings")]
     [SerializeField]
-    private bool _needsFood = false;
+    protected int _attackDamage = 1;
     [SerializeField]
-    private EntitySettings _entitySettings;
+    protected bool _causesKnockback = true;
+    [SerializeField]
+    protected float _knockbackForce = 20f;
+    [SerializeField]
+    private int _threatLevel = 1;
+    
+    [Header("Settings")]
+    [SerializeField]
+    protected bool _needsFood = false;
+    [SerializeField]
+    protected EntitySettings _entitySettings;
     
     [Header("Debug")]
     [SerializeField]
-    private bool _debugLogging = false;
+    protected bool _debugLogging = false;
     
     #endregion // INSPECTOR FIELDS
     
@@ -34,11 +45,11 @@ public class CritterCtl : MonoBehaviour, IDamager, IEntityCtl
     #region INTERNAL FIELDS
 
     // Cached References
-    private ICmdSystem _cmdSystem;
-    private IEntityBody _entityBody;
-    private IHealthManager _healthManager;
-    private IStateMachine _sm;
-    private IStomach _stomach;
+    protected ICmdSystem _cmdSystem;
+    protected IEntityBody _entityBody;
+    protected IHealthManager _healthManager;
+    protected IStateMachine _sm;
+    protected IStomach _stomach;
     
     #endregion // INTERNAL FIELDS
     
@@ -46,11 +57,14 @@ public class CritterCtl : MonoBehaviour, IDamager, IEntityCtl
     #region PROPERTIES
     
     // TODO
-    public int AttackDamage { get; }
-    public bool CauseKnockback { get; }
-    public string DamagerName { get; }
-    public float KnockbackForce { get; }
-    public Vector3 Position { get; }
+    public int AttackDamage { get { return this._attackDamage; } }
+    public bool CauseKnockback { get { return this._causesKnockback; } }
+    public float KnockbackForce { get { return this._knockbackForce; } }
+    
+    public Vector3 Position { get { return this.transform.position; } }
+    public string SourceName { get { return this.name; } }
+    public int ThreatLevel { get { return this._threatLevel; } }
+    public ThreatType ThreatType { get { return ThreatType.Entity; } }
     
     #endregion // PROPERTIES
 
@@ -148,7 +162,7 @@ public class CritterCtl : MonoBehaviour, IDamager, IEntityCtl
     {
         if(this._debugLogging)
         {
-            Debug.Log($"Hit [{damager.AttackDamage}] from [{damager.DamagerName}]");
+            Debug.Log($"Hit [{damager.AttackDamage}] from [{damager.SourceName}]");
         }
 
         if(this._healthManager.IsInvulnerable) { return; }
