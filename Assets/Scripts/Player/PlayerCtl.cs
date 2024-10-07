@@ -23,7 +23,7 @@ public class PlayerCtl : CritterCtl
 
     #region EVENT METHODS
 
-    public void OnStomachContentsChange(int stomachContents)
+    public void OnStomachContentsChange(int stomachContents, int stomachMax)
     {
         if(stomachContents < 0)
         {
